@@ -8,16 +8,16 @@ def generate_creditworthiness_data(num_entries):
         import random
 
 entry = {
-    "Stock at Start of Day": random.randint(50, 500),  # Initial stock quantity
-    "Stock at End of Day": random.randint(0, 500),    # Final stock quantity
+    "Stock at Start of Day": random.randint(50, 500),  # Initial stock quantity                   (done)
+    "Stock at End of Day": random.randint(0, 500),    # Final stock quantity                      (done)
     "Community Reputation": random.choice(["Excellent", "Good", "Average", "Poor", "Unknown"]),
-    "Business Activity Observations": random.randint(5, 500),  # Number of daily customers
+    "Business Activity Observations": random.randint(5, 500),  # Number of daily customers         (done)
     "Informal Credit Relationships": random.choice(["Good Credit History", "Has Defaults", "Unknown"]),
-    "Asset Ownership": random.choice([
+    "Asset Ownership": random.choice([                                                              #(done)
         "Sewing Machine", "Livestock", "Vehicle", "Shop Equipment", "None", 
         "Multiple Assets"
     ]),
-    "Utility and Bill Payment Patterns": random.choice([
+    "Utility and Bill Payment Patterns": random.choice([                                         
         "On Time", "Delayed Payments", "No Records", "Partially Paid"
     ]),
     "Local Market Standing": random.choice([
@@ -39,11 +39,8 @@ entry = {
         "Prime Location", "Moderate Traffic", "Low Traffic Area", 
         "Home-Based", "Remote Area"
     ]),
-    "Infrastructure": random.choice([
-        "Well-Equipped", "Minimal Resources", "Average Setup", 
-        "Requires Upgrades"
-    ]),
-    "Customer and Supplier Relationships": random.randint(1, 50),  # Number of regular connections
+    "Customer Relationship": random.randint(1, 50),
+    "Supplier Relationship": random.randint(1, 50),  # Number of regular connections
     "Observed Consistency": random.choice(["Regularly Open", "Irregular Operations"]),
     "Training and Skill Development": random.choice([
         "Completed Skill Training", "Ongoing Training", 
