@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-export function ChatDashboard() {
+export function ChatDashboardComponent() {
   const questions = [
     "What personal values guide your decision-making in challenging business situations?",
     "How do you maintain a balance between ambition and realism when setting business goals?",

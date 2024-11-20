@@ -13,3 +13,5 @@ langserve
 fastapi
 python-multipart
 sse_starlette 
+flask
+flask_cors

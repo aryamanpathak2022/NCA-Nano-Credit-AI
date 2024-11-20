@@ -6,6 +6,9 @@ import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts'
+import Link from "next/link";
+import { useRouter } from 'next/navigation'; 
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,6 +50,8 @@ export function BorrowerDashboardComponent() {
   const [cardVisible, setCardVisible] = useState(false)
   const cardRef = useRef(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -148,14 +153,44 @@ export function BorrowerDashboardComponent() {
           <Button variant="ghost" className="w-full justify-start">
             <Settings className="mr-2 h-4 w-4" /> Settings
           </Button>
-          <Button variant="ghost" className="w-full justify-start">
+          {/* <Button variant="ghost" className="w-full justify-start">
             <Settings className="mr-2 h-4 w-4" /> Survey
+            
+          </Button> */}
+          <Button
+            variant="ghost"
+            className="w-full justify-start mb-2"
+            // onClick={() => router.push('/repayment_chat')}>
+            onClick={() => router.push('/chat-dashboard')}>
+
+            <CreditCard className="mr-2 h-4 w-4" /> Survey
           </Button>
-          <Button variant="ghost" className="w-full justify-start">
+
+
+          {/* <Button variant="ghost" className="w-full justify-start">
             <Settings className="mr-2 h-4 w-4" /> Ask Ai
+          </Button> */}
+
+<Button
+            variant="ghost"
+            className="w-full justify-start mb-2"
+            // onClick={() => setActiveTab("data-card")}>
+            onClick={() => router.push('/repayment_chat')}>
+
+            <CreditCard className="mr-2 h-4 w-4" /> Ask Ai
           </Button>
-          <Button variant="ghost" className="w-full justify-start">
+
+          {/* <Button variant="ghost" className="w-full justify-start">
             <HandCoins className="mr-2 h-4 w-4" /> Personalized Loan
+          </Button> */}
+
+      <Button
+            variant="ghost"
+            className="w-full justify-start mb-2"
+            // onClick={() => setActiveTab("chat-card")}>
+            onClick={() => router.push('/custom')}>
+
+            <CreditCard className="mr-2 h-4 w-4" /> Personalized Loan
           </Button>
           
         </nav>
@@ -315,7 +350,7 @@ export function BorrowerDashboardComponent() {
                        { name: "Seasonal and Environmental Impact", score: 65, icon: <Star className="w-4 h-4" /> },
                        { name: "Behavioral Indicators", score: 90, icon: <Sparkles className="w-4 h-4" /> },
                        { name: "Business Location and Infrastructure", score: 75, icon: <ShieldCheck className="w-4 h-4" /> },
-                       
+    
                     ].map((factor) => (
                       <div key={factor.name} className="flex items-center">
                         <div className="mr-2 text-violet-400">{factor.icon}</div>

@@ -57,14 +57,25 @@ export function ApplicationFormComponent() {
     // In a real application, you would use the Geolocation API here
     setFormData({ ...formData, location: 'Detected Location' })
   }
-
   const handleFileUpload = (e) => {
-    if (e.target.files) {
-      setFormData(
-        { ...formData, enterpriseImages: [...formData.enterpriseImages, ...e.target.files] }
-      )
+    if (e.target.files && e.target.files.length > 0) {
+      setFormData((prevFormData) => {
+        const updatedFormData = {
+          ...prevFormData,
+          enterpriseImages: [
+            ...(prevFormData.enterpriseImages || []),
+            ...Array.from(e.target.files),
+          ],
+        };
+        console.log("Updated Form Data:", updatedFormData.enterpriseImages);
+        return updatedFormData;
+      });
     }
-  }
+  
+    console.log("Uploaded Files:", e.target.files);
+  };
+  
+  
 
   const handleAddGovernmentId = () => {
     setFormData({
