@@ -5,7 +5,6 @@ import random
 def generate_creditworthiness_data(num_entries):
     data = []
     for _ in range(num_entries):
-<<<<<<< HEAD
         # Generate data for each column
         community_reputation = random.choice(["Excellent", "Good", "Average", "Poor", "Unknown"])
         business_activity_observations = random.randint(5, 500)  # Number of daily customers
