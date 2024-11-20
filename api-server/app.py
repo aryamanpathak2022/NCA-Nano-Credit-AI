@@ -1,11 +1,10 @@
 import os
 from dotenv import load_dotenv
-import streamlit as st
-from fastapi import HTTPException
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 import google.generativeai as genai
 from google.ai.generativelanguage import Content, Part, Blob
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 # Load environment variables
@@ -27,59 +26,90 @@ llm = ChatGoogleGenerativeAI(
     max_retries=2,
 )
 
-business_name = "Aryaman's Shop"
-business_location = "Karnatak/Bengaluru/Electronic-City/Nilladri"
+# Flask application
+app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
-# The template for generating the response
-generic_template = f'''You are a knowledgeable AI assistant. Analyze the uploaded image of a vendor shop and provide a detailed report using the following format:
+@app.route('/analyze', methods=['POST'])
+def analyze_data():
+    try:
+        # Parse the JSON data sent by the frontend
+        data = request.get_json()
 
-{{
-    "business_activity_observations": "Give the number of persons visible in the provided image only the number no explanation needed",
-    "asset_Ownership": "Provide the comma-separated assets with their names",
-    "seasonal_and_env_impact": "Provide either 'High Seasonal Variation', 'Moderate Seasonal Variation', 'Minimal Seasonal Variation', or 'Weather Sensitive' depending upon the nature of the business",
-    "business_location": "The shop is located in {business_location} according to Google Maps. Provide either 'Prime Location', 'Moderate Traffic', 'Low Traffic Area', 'Home-Based', or 'Remote Area'",
-    "local_market_standing": "The shop name is {business_name}, the shop location is {business_location} according to Google Maps. Provide either 'Highly Popular', 'Moderately Popular', 'Average', 'Low Footfall', or 'New Business' if busniess not found in google maps just give "Business Not Found""
-    "customer_review":"range from 1 to 10 according to the goggle reviews and if not found just give "No Reviews Found""
-}}
+        # Extract fields from the incoming data
+        vendor_name = data.get('vendorName', '')
+        print(vendor_name)
+        business_name = data.get('businessName', '')
+        print(business_name)
+        business_title = data.get('businessTitle', '')
+        print(business_title)
+        location = data.get('location', '')
+        print(location)
+        welfare_scheme = data.get('welfareScheme', '')
+        print(welfare_scheme)
 
-Strictly adhere to the provided JSON format when generating the response. Do not introduce any additional characters, formatting styles, or symbols. If the uploaded image is unclear or not related to a vendor shop, mention that the analysis is not possible for the respective fields and ensure all fields in the JSON format are addressed.'''
+        enterprise_images = data.get('enterpriseImages', [])
+        print(enterprise_images)
 
-# Initialize the output parser
-parser = StrOutputParser()
+        shop_location = data.get('shopLocation', '')
+        print(shop_location)
+        family_members = data.get('familyMembers', '')
+        print(family_members)
 
-# Streamlit UI setup
-st.title("Vendor Shop Image Analyzer")
-st.write("Upload an image of a vendor shop to get an analysis.")
 
-# File upload widget
-uploaded_file = st.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"])
+        enterprise_images = data.get('enterpriseImages', [])
+        survey_link = data.get('surveyLink', '')
+        print(survey_link)
+        government_ids = data.get('governmentIds', [])
+        print(government_ids)
 
-if uploaded_file:
-    # Validate the file type
-    file_type = uploaded_file.type
-    if file_type not in ["image/jpeg", "image/png"]:
-        st.error("Invalid file type. Please upload a JPEG or PNG image.")
-    else:
-        try:
-            # Read the uploaded image data
-            bytes_data = uploaded_file.read()
+        # Validate required fields
+        if not vendor_name or not business_name:
+            return jsonify({"error": "Vendor name and business name are required."}), 400
 
-            # Prepare the content parts with the image data and instructions
+        # Process images if provided
+        image_analysis_results = []
+        for image_data in enterprise_images:
+            # Assuming enterprise_images contains base64-encoded images
+            file_type = "image/jpeg"  # Example; update if file type is included in the frontend
+            blob_data = bytes(image_data, encoding='utf-8')
+            
+            # Prepare the content parts with the image data
             content_parts = [
-                Part(text=generic_template),  # System message with instructions
-                Part(inline_data=Blob(mime_type=file_type, data=bytes_data))  # The image as binary data
+                Part(text=f"Analyze the image for the business {business_name} titled {business_title}."),  # System message with instructions
+                Part(inline_data=Blob(mime_type=file_type, data=blob_data))  # The image as binary data
             ]
 
             # Generate the content
             response = genai.GenerativeModel('gemini-1.5-pro').generate_content(Content(parts=content_parts))
             response.resolve()
-
+            
             # Parse the AI's analysis result
+            parser = StrOutputParser()
             parsed_response = parser.invoke(response.text)
 
-            # Display the AI's analysis result
-            st.subheader("Analysis Result")
-            st.write(parsed_response)
+            # Collect analysis results
+            image_analysis_results.append(parsed_response)
 
-        except Exception as e:
-            st.error(f"An error occurred: {str(e)}")
+        # Combine all results into the final output
+        final_result = {
+            "vendorName": vendor_name,
+            "businessName": business_name,
+            "businessTitle": business_title,
+            "location": location,
+            "welfareScheme": welfare_scheme,
+            "familyMembers": family_members,
+            "shopLocation": shop_location,
+            "enterpriseImagesAnalysis": image_analysis_results,
+            "surveyLink": survey_link,
+            "governmentIds": government_ids
+        }
+
+        # Return the result as JSON
+        return jsonify(final_result)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)

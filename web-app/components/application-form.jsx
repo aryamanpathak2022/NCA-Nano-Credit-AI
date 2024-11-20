@@ -7,7 +7,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { ArrowLeft, ArrowRight, Share2, MapPin } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Share2, MapPin, Link } from 'lucide-react';
+import axios from 'axios'; // Import axios
+// import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
 
 const formPages = [
   'Basic Info',
@@ -19,6 +23,8 @@ const formPages = [
 
 export function ApplicationFormComponent() {
   const [currentPage, setCurrentPage] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const router = useRouter();
   const [formData, setFormData] = useState({
     vendorName: '',
     businessName: '',
@@ -26,17 +32,25 @@ export function ApplicationFormComponent() {
     location: '',
     welfareScheme: '',
     familyMembers: '',
+    shopLocation: '',
     enterpriseImages: [],
-    surveyLink: 'https://example.com/survey',
     governmentIds: [{ type: '', number: '' }]
   })
+
+  
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
   const handleSelectChange = (name, value) => {
-    setFormData({ ...formData, [name]: value })
+    // setFormData({ ...formData, [name]: value })
+    setFormData((prev) => {
+      return {
+        ...prev,
+        [name]: value
+      }
+    })
   }
 
   const handleLocationDetect = () => {
@@ -76,6 +90,30 @@ export function ApplicationFormComponent() {
       setCurrentPage(currentPage - 1)
     }
   }
+
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('http://127.0.0.1:5000/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      if (!response.ok) throw new Error('API request failed');
+      const data = await response.json();
+      setApiResponse(data);
+      alert('Form submitted successfully!');
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('Failed to submit form.');
+    } finally {
+      router.push('/dashboard');
+      setLoading(false);
+    }
+  };
 
   const renderFormPage = () => {
     switch (currentPage) {
@@ -133,7 +171,7 @@ export function ApplicationFormComponent() {
         return (
           (<div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="welfareScheme">Welfare Scheme</Label>
+              {/* <Label htmlFor="welfareScheme">Welfare Scheme</Label>
               <Select onValueChange={(value) => handleSelectChange('welfareScheme', value)}>
                 <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white">
                   <SelectValue placeholder="Select a welfare scheme" />
@@ -143,7 +181,18 @@ export function ApplicationFormComponent() {
                   <SelectItem value="scheme2">Scheme 2</SelectItem>
                   <SelectItem value="scheme3">Scheme 3</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select> */}
+              <label htmlFor="welfare-scheme">Select Welfare Scheme:</label>
+                <Select value={formData.welfareScheme} onValueChange={(value) => handleSelectChange('welfareScheme', value)}>
+                    <SelectTrigger id="welfare-scheme">
+                        <SelectValue placeholder="Select a Scheme" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="scheme1">Scheme 1</SelectItem>
+                        <SelectItem value="scheme2">Scheme 2</SelectItem>
+                        <SelectItem value="scheme3">Scheme 3</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
             <div className="space-y-2">
               <Label htmlFor="familyMembers">Number of Family Members</Label>
@@ -153,6 +202,7 @@ export function ApplicationFormComponent() {
                 type="number"
                 value={formData.familyMembers}
                 onChange={handleInputChange}
+                
                 className="bg-slate-800/50 border-slate-700 text-white" />
             </div>
           </div>)
@@ -162,6 +212,8 @@ export function ApplicationFormComponent() {
           (<div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="enterpriseImages">Upload Images or Videos of Your Enterprise</Label>
+
+              <div className="flex items-center space-x-2">
               <Input
                 id="enterpriseImages"
                 type="file"
@@ -169,12 +221,18 @@ export function ApplicationFormComponent() {
                 accept="image/*,video/*"
                 onChange={handleFileUpload}
                 className="bg-slate-800/50 border-slate-700 text-white" />
+                </div>
+
+
             </div>
             <div className="space-y-2">
               <Label htmlFor="shopLocation">Location of Shops</Label>
               <Textarea
                 id="shopLocation"
                 name="shopLocation"
+                type="string"
+                value={formData.shopLocation}
+                onChange={handleInputChange}
                 placeholder="Enter the locations of your shops"
                 className="bg-slate-800/50 border-slate-700 text-white" />
             </div>
@@ -187,14 +245,27 @@ export function ApplicationFormComponent() {
             <div
               className="flex items-center space-x-2 bg-slate-800/50 border border-slate-700 rounded p-2">
               <Input
-                value={formData.surveyLink}
+                value={'http://localhost:8501'}
                 readOnly
                 className="bg-transparent border-none text-white" />
-              <Button variant="outline" className="bg-slate-700 text-white">
+              <Button variant="outline1" onClick={() => window.open("http://localhost:8501", "_blank")} className="bg-slate-700 text-white">
                 <Share2 className="w-4 h-4 mr-2" />
                 Share
               </Button>
             </div>
+
+            <div
+              className="flex items-center space-x-2 bg-slate-800/50 border border-slate-700 rounded p-2">
+              <Input
+                value={'http://localhost:8501'}
+                readOnly
+                className="bg-transparent border-none text-white" />
+              <Button variant="outline2" onClick={() => window.open("http://localhost:8502", "_blank")} className="bg-slate-700 text-white">
+                <Share2 className="w-4 h-4 mr-2" />
+                Share
+              </Button>
+            </div>
+
           </div>)
         );
       case 4:
@@ -202,7 +273,7 @@ export function ApplicationFormComponent() {
           (<div className="space-y-4">
             {formData.governmentIds.map((id, index) => (
               <div key={index} className="space-y-2">
-                <Select onValueChange={(value) => handleGovernmentIdChange(index, 'type', value)}>
+                <Select value={formData.governmentIds[0].type} onValueChange={(value) => handleGovernmentIdChange(index, 'type', value)}>
                   <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white">
                     <SelectValue placeholder="Select ID type" />
                   </SelectTrigger>
@@ -268,7 +339,7 @@ export function ApplicationFormComponent() {
         <CardContent>
           {renderFormPage()}
         </CardContent>
-        <CardFooter className="flex justify-between">
+        {/* <CardFooter className="flex justify-between">
           <Button
             onClick={handleBack}
             disabled={currentPage === 0}
@@ -284,7 +355,24 @@ export function ApplicationFormComponent() {
             {currentPage === formPages.length - 1 ? 'Submit' : 'Next'}
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
-        </CardFooter>
+        </CardFooter> */}
+        <CardFooter className="flex justify-between">
+        <Button onClick={handleBack} disabled={currentPage === 0}>
+          Back
+        </Button>
+        {currentPage === formPages.length - 1 ? (
+          
+          <Button onClick={handleSubmit}>
+            Submit
+          </Button>
+          
+          
+        ) : (
+          <Button onClick={handleNext}>
+            Next
+          </Button>
+        )}
+      </CardFooter>
       </Card>
       <style jsx>{`
         @keyframes float1 {
