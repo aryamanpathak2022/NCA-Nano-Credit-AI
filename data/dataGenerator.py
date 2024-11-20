@@ -34,7 +34,8 @@ def generate_creditworthiness_data(num_entries):
             "Prime Location", "Moderate Traffic", "Low Traffic Area", 
             "Home-Based", "Remote Area"
         ])
-        customer_supplier_relationships = random.randint(1, 50)  # Number of regular connections
+        supplier_review = random.randint(1, 50)  # Number of regular connections
+        customer_review = random.randint(1, 50)
         observed_consistency = random.choice(["Regularly Open", "Irregular Operations"])
         training_and_skill_dev = random.choice([
             "Completed Skill Training", "Ongoing Training", 
