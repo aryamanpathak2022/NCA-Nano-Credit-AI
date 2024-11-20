@@ -37,8 +37,8 @@ entry = {
         "Prime Location", "Moderate Traffic", "Low Traffic Area", 
         "Home-Based", "Remote Area"
     ]),
-    "Customer Relationship": random.randint(1, 50),
-    "Supplier Relationship": random.randint(1, 50),  # Number of regular connections
+    "Customer review": random.randint(1, 50),
+    "Supplier review": random.randint(1, 50),  # Number of regular connections
     "Observed Consistency": random.choice(["Regularly Open", "Irregular Operations"]),
     "Training and Skill Development": random.choice([
         "Completed Skill Training", "Ongoing Training", 
