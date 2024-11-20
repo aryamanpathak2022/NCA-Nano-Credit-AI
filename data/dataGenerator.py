@@ -1,49 +1,62 @@
 import pandas as pd
-import numpy as np
 import random
-from faker import Faker
 
-# Initialize Faker for random realistic data
-faker = Faker()
-
-# Function to generate random data points
-def generate_synthetic_data(num_entries):
+# Function to generate synthetic data
+def generate_creditworthiness_data(num_entries):
     data = []
-    for i in range(num_entries):
+    for _ in range(num_entries):
         entry = {
-            "Entrepreneur ID": i + 1,
-            "Community Reputation": random.choice(["Good", "Average", "Poor"]),
-            "Daily Customers": random.randint(5, 50),
-            "Weekly Revenue (₹)": random.randint(1000, 20000),
-            "Informal Credit History": random.choice(["Good", "Defaults"]),
-            "Assets Owned": ", ".join(random.sample(
-                ["Sewing Machine", "Bicycle", "Livestock", "Motorbike", "Tools", "Small Shop", "Inventory", "None"], 
-                random.randint(1, 3)
-            )),
-            "Last Utility Payment Date": faker.date_between(start_date='-1y', end_date='today'),
-            "Local Market Standing": random.choice(["Popular", "Medium Footfall", "Low Footfall"]),
-            "Welfare Program Participation": random.choice([True, False]),
-            "Dependents": random.randint(0, 6),
-            "Seasonality Impact": random.choice(["Low", "Moderate", "High"]),
-            "Risk-Taking Score": random.choice(["Low", "Medium", "High"]),
-            "Business Location Quality": random.choice(["Prime Location", "Moderate Traffic", "Remote Location"]),
-            "Regular Customers": random.randint(2, 50),
-            "Training Completed": random.choice(["Skill India Certified", "None"]),
-            "Outstanding Debt (₹)": random.randint(0, 10000),
-            "Savings (₹)": random.randint(0, 20000),
-            "Aadhaar Linked": random.choice([True, False]),
-            "Ration Card Type": random.choice(["BPL", "APL", "Antyodaya"]),
-            "Voter ID Linked": random.choice([True, False]),
+            "Community Reputation": random.choice(["Excellent", "Good", "Average", "Poor", "Unknown"]),
+            "Business Activity Observations": random.randint(5, 500),  # Number of daily customers
+            "Informal Credit Relationships": random.choice(["Good Credit History", "Has Defaults", "Unknown"]),
+            "Asset Ownership": random.choice([
+                "Sewing Machine", "Livestock", "Vehicle", "Shop Equipment", "None", 
+                "Multiple Assets"
+            ]),
+            "Utility and Bill Payment Patterns": random.choice([
+                "On Time", "Delayed Payments", "No Records", "Partially Paid"
+            ]),
+            "Local Market Standing": random.choice([
+                "Highly Popular", "Moderately Popular", "Average", "Low Footfall", "New Business"
+            ]),
+            "Participation in Welfare or Support Programs": random.choice([
+                "Enrolled in MUDRA", "Enrolled in SHG", "None", "Multiple Programs"
+            ]),
+            "Family and Dependents": random.randint(1, 10),
+            "Seasonal and Environmental Impact": random.choice([
+                "High Seasonal Variation", "Moderate Seasonal Variation", 
+                "Minimal Seasonal Variation", "Weather Sensitive"
+            ]),
+            "Behavioral Indicators": random.choice([
+                "High Risk-Taker", "Cautious", "Good Problem-Solver", "Indecisive"
+            ]),
+            "Business Location and Infrastructure": random.choice([
+                "Prime Location", "Moderate Traffic", "Low Traffic Area", 
+                "Home-Based", "Remote Area"
+            ]),
+            "Customer and Supplier Relationships": random.randint(1, 50),  # Number of regular connections
+            "Observed Consistency": random.choice(["Regularly Open", "Irregular Operations"]),
+            "Training and Skill Development": random.choice([
+                "Completed Skill Training", "Ongoing Training", 
+                "No Formal Training", "Multiple Certifications"
+            ]),
+            "Debt and Liabilities": round(random.uniform(1000, 50000), 2),  # INR
+            "Savings and Insurance": random.choice([
+                "Chit Fund Savings", "Insurance Policy", "None", "Both Savings and Insurance"
+            ]),
+            "Aadhaar Card": random.choice(["Verified", "Not Verified"]),
+            "Ration Card": random.choice(["BPL", "APL", "Antyodaya", "Not Provided"]),
+            "Voter ID Card": random.choice(["Verified", "Not Verified"]),
         }
         data.append(entry)
+
     return pd.DataFrame(data)
 
-# Generate a dataset of 10 entries
-num_entries = 100
-synthetic_data = generate_synthetic_data(num_entries)
+# Generate synthetic data for 100 entries
+df = generate_creditworthiness_data(100)
 
-# Save to CSV for further use
-synthetic_data.to_csv("synthetic_nano_entrepreneur_data.csv", index=False)
+# Save to a CSV file
+df.to_csv("synthetic_creditworthiness_data.csv", index=False)
 
-# Display the generated dataset
-# print(synthetic_data)
+# Display the first few rows
+print(df.head())
