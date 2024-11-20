@@ -8,8 +8,6 @@ def generate_creditworthiness_data(num_entries):
         import random
 
 entry = {
-    "Stock at Start of Day": random.randint(50, 500),  # Initial stock quantity                   (done)
-    "Stock at End of Day": random.randint(0, 500),    # Final stock quantity                      (done)
     "Community Reputation": random.choice(["Excellent", "Good", "Average", "Poor", "Unknown"]),
     "Business Activity Observations": random.randint(5, 500),  # Number of daily customers         (done)
     "Informal Credit Relationships": random.choice(["Good Credit History", "Has Defaults", "Unknown"]),
