@@ -5,7 +5,9 @@ import random
 def generate_creditworthiness_data(num_entries):
     data = []
     for _ in range(num_entries):
-        entry = {
+        import random
+
+entry = {
     "Stock at Start of Day": random.randint(50, 500),  # Initial stock quantity
     "Stock at End of Day": random.randint(0, 500),    # Final stock quantity
     "Community Reputation": random.choice(["Excellent", "Good", "Average", "Poor", "Unknown"]),
@@ -32,9 +34,14 @@ def generate_creditworthiness_data(num_entries):
     "Behavioral Indicators": random.choice([
         "High Risk-Taker", "Cautious", "Good Problem-Solver", "Indecisive"
     ]),
-    "Business Location and Infrastructure": random.choice([
+    # Split into separate fields
+    "Business Location": random.choice([
         "Prime Location", "Moderate Traffic", "Low Traffic Area", 
         "Home-Based", "Remote Area"
+    ]),
+    "Infrastructure": random.choice([
+        "Well-Equipped", "Minimal Resources", "Average Setup", 
+        "Requires Upgrades"
     ]),
     "Customer and Supplier Relationships": random.randint(1, 50),  # Number of regular connections
     "Observed Consistency": random.choice(["Regularly Open", "Irregular Operations"]),
@@ -50,6 +57,12 @@ def generate_creditworthiness_data(num_entries):
     "Ration Card": random.choice(["BPL", "APL", "Antyodaya", "Not Provided"]),
     "Voter ID Card": random.choice(["Verified", "Not Verified"]),
 }
+
+# Ensure the stock at the end of the day is not greater than at the start
+entry["Stock at End of Day"] = random.randint(0, entry["Stock at Start of Day"])
+
+print(entry)
+
         data.append(entry)
 
     return pd.DataFrame(data)
