@@ -1,5 +1,6 @@
 # Creditworthiness Assessment Datapoints  
 
+
 ## **1. Community Reputation**  
 - **Data Type**: String/Rating (e.g., "Good", "Average", "Poor")  
 - **Way to Collect**:  
