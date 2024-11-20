@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Send, Menu, Home, MessageSquare, Settings } from 'lucide-react';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,11 +8,28 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export function ChatDashboard() {
+  const questions = [
+    "What personal values guide your decision-making in challenging business situations?",
+    "How do you maintain a balance between ambition and realism when setting business goals?",
+    "How do you perceive setbacks or failures in your business journey?",
+    "What mindset helps you persevere during periods of uncertainty?",
+    "How do you manage self-doubt or criticism in the context of running your business?",
+    "What strategies do you use to stay motivated and inspire your team?",
+    "How do you approach learning from competitors without losing sight of your own goals?",
+    "What role does trust play in your relationships with employees and stakeholders?",
+    "How do you manage the emotional impact of financial pressure in your business?",
+    "How does your personal vision align with the overall goals of your business?",
+    "Describe how you see you business future in the next 5 years.",
+  ];
+  
+
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [messages, setMessages] = useState([
-    { id: 1, sender: 'ai', content: 'Hello! How can I assist you today?' },
-    { id: 2, sender: 'user', content: 'Can you help me with my credit score?' },
-    { id: 3, sender: 'ai', content: 'Of course! Your current credit score is 720, which is considered good. Would you like some tips on how to improve it further?' }
-  ])
+    { id: 1, sender: 'ai', content: questions[0] }
+  ]);
+  const [inputMessage, setInputMessage] = useState('');
+  const [answers, setAnswers] = useState({});
+  const scrollAreaRef = useRef(null)
 
   const [shapes, setShapes] = useState([])
 
@@ -39,6 +56,12 @@ export function ChatDashboard() {
 
     generateShapes()
   }, [])
+
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
+    }
+  }, [messages])
 
   const renderShape = (shape) => {
     const lightPurple = '#e0d0ff'
@@ -72,6 +95,48 @@ export function ChatDashboard() {
         return null
     }
   }
+
+
+
+  const handleSendMessage = () => {
+    if (inputMessage.trim() === '') return;
+
+    const newUserMessage = {
+      id: messages.length + 1,
+      sender: 'user',
+      content: inputMessage.trim()
+    };
+
+    setMessages((prevMessages) => [...prevMessages, newUserMessage]);
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [questions[currentQuestionIndex]]: inputMessage.trim()
+    }));
+    setInputMessage('');
+
+    // Simulate AI response and move to the next question
+    setTimeout(() => {
+      if (currentQuestionIndex < questions.length - 1) {
+        const nextQuestion = questions[currentQuestionIndex + 1];
+        const aiResponse = {
+          id: messages.length + 2,
+          sender: 'ai',
+          content: nextQuestion
+        };
+
+        setMessages((prevMessages) => [...prevMessages, aiResponse]);
+        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+      } else {
+        const finalResponse = {
+          id: messages.length + 2,
+          sender: 'ai',
+          content: "Thank you for completing all the questions!"
+        };
+
+        setMessages((prevMessages) => [...prevMessages, finalResponse]);
+      }
+    }, 1000);
+  };
 
   return (
     (<div className="flex h-screen bg-[#0a0b1a] overflow-hidden relative">
@@ -132,7 +197,7 @@ export function ChatDashboard() {
         </header>
 
         {/* Chat Area */}
-        <ScrollArea className="flex-1 p-4">
+        <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
           <div className="space-y-4">
             {messages.map((message) => (
               <div
@@ -156,9 +221,12 @@ export function ChatDashboard() {
           className="p-4 border-t border-[#2a2b4a] bg-[#12132d]/80 backdrop-blur-sm">
           <div className="flex gap-4">
             <Input
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
               placeholder="Type your message..."
               className="flex-1 bg-[#1a1b3d] border-[#2a2b4a] text-white" />
-            <Button className="bg-violet-600 hover:bg-violet-700">
+            <Button onClick={handleSendMessage} className="bg-violet-600 hover:bg-violet-700">
               <Send className="h-4 w-4" />
               <span className="sr-only">Send message</span>
             </Button>

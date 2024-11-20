@@ -1,8 +1,8 @@
-import { ApplicationFormComponent } from "@/components/application-form";
+import { ApplicationForm } from "@/components/application-form";
 
 export default function App() {
     return (
-        <ApplicationFormComponent />
+        <ApplicationForm />
        
     );
 }
