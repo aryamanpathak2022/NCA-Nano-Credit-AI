@@ -7,8 +7,16 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+<<<<<<< HEAD
 import { ArrowLeft, ArrowRight, Share2, MapPin } from 'lucide-react';
 import axios from 'axios'; // Import axios
+=======
+import { ArrowLeft, ArrowRight, Share2, MapPin, Link } from 'lucide-react';
+import axios from 'axios'; // Import axios
+// import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+>>>>>>> 035c3d1530a51335dac8ba705e645eda19f92043
 
 const formPages = [
   'Basic Info',
@@ -21,6 +29,10 @@ const formPages = [
 export function ApplicationFormComponent() {
   const [currentPage, setCurrentPage] = useState(0)
   const [loading, setLoading] = useState(false)
+<<<<<<< HEAD
+=======
+  const router = useRouter();
+>>>>>>> 035c3d1530a51335dac8ba705e645eda19f92043
   const [formData, setFormData] = useState({
     vendorName: '',
     businessName: '',
@@ -32,6 +44,8 @@ export function ApplicationFormComponent() {
     enterpriseImages: [],
     governmentIds: [{ type: '', number: '' }]
   })
+
+  
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -104,6 +118,10 @@ export function ApplicationFormComponent() {
       console.error('Error submitting form:', error);
       alert('Failed to submit form.');
     } finally {
+<<<<<<< HEAD
+=======
+      router.push('/dashboard');
+>>>>>>> 035c3d1530a51335dac8ba705e645eda19f92043
       setLoading(false);
     }
   };
@@ -354,9 +372,18 @@ export function ApplicationFormComponent() {
           Back
         </Button>
         {currentPage === formPages.length - 1 ? (
+<<<<<<< HEAD
           <Button onClick={handleSubmit}>
             Submit
           </Button>
+=======
+          
+          <Button onClick={handleSubmit}>
+            Submit
+          </Button>
+          
+          
+>>>>>>> 035c3d1530a51335dac8ba705e645eda19f92043
         ) : (
           <Button onClick={handleNext}>
             Next

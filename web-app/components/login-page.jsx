@@ -5,12 +5,14 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Loader2, ShieldCheck, Coins } from 'lucide-react'
+import { Loader2, ShieldCheck, Coins, Link } from 'lucide-react'
+import { useRouter } from 'next/navigation'; 
 
-export function LoginPage() {
+export  function LoginPageComponent () {
   const [step, setStep] = useState('aadhaar')
   const [isLoading, setIsLoading] = useState(false)
   const otpInputs = useRef([])
+  const router = useRouter()
 
   const handleAadhaarSubmit = (e) => {
     e.preventDefault()
@@ -27,6 +29,7 @@ export function LoginPage() {
     setTimeout(() => {
       setIsLoading(false)
       // Handle successful login here
+         router.push('/application-form');
     }, 1500)
   }
 
@@ -128,18 +131,22 @@ export function LoginPage() {
                   ))}
                 </div>
               </div>
-              <Button
-                type="submit"
-                className="w-full bg-violet-600 hover:bg-violet-700 text-white"
-                disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Verifying
-                  </>
-                ) : (
+          
+            <Button
+              type="submit"
+              className="w-full bg-violet-600 hover:bg-violet-700 text-white"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Verifying
+                </>
+              ) : (
                   'Login'
-                )}
-              </Button>
+                
+              )}
+            </Button>
+          
             </form>
           )}
         </CardContent>
