@@ -60,11 +60,15 @@ export function ApplicationFormComponent() {
 
   const handleFileUpload = (e) => {
     if (e.target.files) {
-      setFormData(
-        { ...formData, enterpriseImages: [...formData.enterpriseImages, ...e.target.files] }
-      )
+        // Convert FileList to an array and merge with existing files
+        const newFiles = Array.from(e.target.files);
+        setFormData({
+            ...formData,
+            enterpriseImages: [...(formData.enterpriseImages || []), ...newFiles],
+        });
     }
-  }
+};
+
 
   const handleAddGovernmentId = () => {
     setFormData({
