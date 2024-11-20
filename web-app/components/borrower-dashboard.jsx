@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,12 +33,12 @@ import {
 } from 'lucide-react';
 
 // Placeholder chart component (replace with actual chart library component)
-const LineChart = ({ data, xAxis, yAxis }) => (
-  <div
-    className="w-full h-64 bg-gradient-to-r from-violet-500/20 to-indigo-500/20 rounded-lg flex items-center justify-center">
-    Line Chart Placeholder
-  </div>
-)
+// const LineChart = ({ data, xAxis, yAxis }) => (
+//   <div
+//     className="w-full h-64 bg-gradient-to-r from-violet-500/20 to-indigo-500/20 rounded-lg flex items-center justify-center">
+//     Line Chart Placeholder
+//   </div>
+// )
 
 export function BorrowerDashboardComponent() {
   const [activeTab, setActiveTab] = useState("overview")
@@ -254,17 +255,43 @@ export function BorrowerDashboardComponent() {
                   <CardTitle>Loan Repayment History</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
-                  <LineChart
-                    data={[
-                      { name: 'Jan', amount: 5000 },
-                      { name: 'Feb', amount: 10000 },
-                      { name: 'Mar', amount: 15000 },
-                      { name: 'Apr', amount: 20000 },
-                      { name: 'May', amount: 25000 },
-                      { name: 'Jun', amount: 30000 },
-                    ]}
-                    xAxis="name"
-                    yAxis="amount" />
+                <div className="h-[500px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart
+                        data={[
+                          { month: 'Jan', amount: 5000 },
+                          { month: 'Feb', amount: 10000 },
+                          { month: 'Mar', amount: 25000 },
+                          { month: 'Apr', amount: 20000 },
+                          { month: 'May', amount: 45000 },
+                          { month: 'Jun', amount: 30000 },
+                        ]}
+                      >
+                        <XAxis
+                          dataKey="month"
+                          stroke="#888888"
+                          fontSize={12}
+                          tickLine={false}
+                          axisLine={false}
+                        />
+                        <YAxis
+                          stroke="#888888"
+                          fontSize={12}
+                          tickLine={false}
+                          axisLine={false}
+                          tickFormatter={(value) => `₹${value}`}
+                        />
+                        <Tooltip />
+                        <Line
+                          type="monotone"
+                          dataKey="amount"
+                          stroke="#8884d8"
+                          strokeWidth={2}
+                          dot={{ fill: "#8884d8", strokeWidth: 2 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
                 </CardContent>
               </Card>
               <Card className="col-span-3 bg-slate-800/50 border-slate-700">
