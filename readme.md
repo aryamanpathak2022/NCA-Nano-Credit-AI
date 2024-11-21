@@ -1,6 +1,28 @@
-# 🌟 **Nano Credit AI**: ML solution for assessing Nano-Enterprise Creditworthiness 
+ 🌟 **Nano Credit AI**: ML solution for assessing Nano-Enterprise Creditworthiness 
 
+![image](https://github.com/user-attachments/assets/4ff19b17-53d2-4e8c-b976-da2d9debedf1)
+
+
+![image](https://github.com/user-attachments/assets/d2ef5247-e7a6-4001-9b42-99a0a808d572)
+
+
+![image](https://github.com/user-attachments/assets/ef04abb5-3c12-46ec-8c9c-0375b08d8524)
+
+
+
+![image](https://github.com/user-attachments/assets/0385aabb-7c60-4e72-88e9-0dc4bc97853e)
+
+
+
+
+## 🚀 **Exploaratory Data analytics**  
+![image](https://github.com/user-attachments/assets/062243c0-d182-4977-8c26-83086d5586d2)
+
+![image](https://github.com/user-attachments/assets/15249479-54a5-42de-8858-e9c3125fb420)
 ---
+
+
+
 
 ## 🚀 **Vision**  
 Imagine a world where **nano-entrepreneurs**—the heart and soul of local economies—can access the credit they deserve. **Nano Credit AI** is here to make that a reality.  
