@@ -79,7 +79,7 @@ export function CreditDataCardComponent() {
         className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
         <div className="space-y-6">
           <div>
-            <h1 className="text-4xl font-bold mb-4">Your Credit Data Card</h1>
+            <h1 className="text-4xl font-bold mb-4">Your Loan Data Card</h1>
             <p className="text-gray-400">
               Your key to secure, seamless access to financial opportunities. Share it responsibly with authorized bankers or institutions.
             </p>

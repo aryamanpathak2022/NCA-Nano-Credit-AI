@@ -199,9 +199,13 @@ export function ApplicationFormComponent() {
                         <SelectValue placeholder="Select a Scheme" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="scheme1">Scheme 1</SelectItem>
-                        <SelectItem value="scheme2">Scheme 2</SelectItem>
-                        <SelectItem value="scheme3">Scheme 3</SelectItem>
+                    <SelectItem value="pmmy">Pradhan Mantri Mudra Yojana (PMMY)</SelectItem>
+<SelectItem value="kcc">Kisan Credit Card (KCC)</SelectItem>
+<SelectItem value="psbloans">PSB Loans in 59 Minutes</SelectItem>
+<SelectItem value="income-assessment">Income Assessment</SelectItem>
+<SelectItem value="employment-verification">Employment Verification</SelectItem>
+<SelectItem value="self-help-group">Self Help Group (SHG) Membership</SelectItem>
+<SelectItem value="standup-india">Stand-Up India Scheme</SelectItem>
                     </SelectContent>
                 </Select>
             </div>

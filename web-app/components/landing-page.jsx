@@ -148,12 +148,14 @@ export default function LandingPageComponent() {
               <Button size="lg" className="bg-purple-600 hover:bg-purple-700">
                 Check Eligibility
               </Button>
+              <Link href="/datapoints">
               <Button
                 size="lg"
                 variant="outline"
                 className="border-purple-500 text-purple-400 hover:bg-purple-500/10">
                 Learn More
               </Button>
+              </Link>
             </div>
           </motion.div>
         </div>

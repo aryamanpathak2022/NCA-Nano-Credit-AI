@@ -162,10 +162,10 @@ export function CreditworthinessAssessmentComponent() {
                 <TabsTrigger
                   key={datapoint.id}
                   value={datapoint.id}
-                  className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  className={`px-3 py-2 text-sm font-medium rounded transition-colors ${
                     activeTab === datapoint.id
                       ? 'bg-violet-600 text-white'
-                      : 'bg-slate-800 text-gray-400 hover:bg-slate-700'
+                      : 'bg-violet-600 text-white hover:bg-slate-700'
                   }`}
                 >
                   {datapoint.title}
