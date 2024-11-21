@@ -1,30 +1,20 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
+import { useState,useEffect} from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { ArrowLeft, ArrowRight, Share2, MapPin, Link } from 'lucide-react';
-import axios from 'axios'; // Import axios
-// import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-
-
-const formPages = [
-  'Basic Info',
-  'Welfare Schemes',
-  'Enterprise Details',
-  'Survey Links',
-  'Government IDs'
-]
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { ArrowLeft, ArrowRight, Share2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 export function ApplicationFormComponent() {
   const [currentPage, setCurrentPage] = useState(0)
   const [loading, setLoading] = useState(false)
-  const router = useRouter();
+  const router = useRouter()
+  const [selectedImage, setSelectedImage] = useState(null)
   const [formData, setFormData] = useState({
     vendorName: '',
     businessName: '',
@@ -33,61 +23,41 @@ export function ApplicationFormComponent() {
     welfareScheme: '',
     familyMembers: '',
     shopLocation: '',
-    enterpriseImages: [],
     governmentIds: [{ type: '', number: '' }]
   })
 
+
+
   
+
+  const formPages = [
+    'Personal Information',
+    'Business Details',
+    'Family Information',
+    'Government IDs',
+    'Additional Information'
+  ]
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+    const { name, value } = e.target
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value
+    }))
   }
 
-  const handleSelectChange = (name, value) => {
-    // setFormData({ ...formData, [name]: value })
-    setFormData((prev) => {
-      return {
-        ...prev,
-        [name]: value
-      }
-    })
+  const handleGovIdChange = (field, value) => {
+    setFormData(prevData => ({
+      ...prevData,
+      governmentIds: [{ ...prevData.governmentIds[0], [field]: value }]
+    }))
   }
 
-  const handleLocationDetect = () => {
-    // In a real application, you would use the Geolocation API here
-    setFormData({ ...formData, location: 'Detected Location' })
-  }
-  const handleFileUpload = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFormData((prevFormData) => {
-        const updatedFormData = {
-          ...prevFormData,
-          enterpriseImages: [
-            ...(prevFormData.enterpriseImages || []),
-            ...Array.from(e.target.files),
-          ],
-        };
-        console.log("Updated Form Data:", updatedFormData.enterpriseImages);
-        return updatedFormData;
-      });
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+      setSelectedImage(file)
     }
-  
-    console.log("Uploaded Files:", e.target.files);
-  };
-  
-  
-
-  const handleAddGovernmentId = () => {
-    setFormData({
-      ...formData,
-      governmentIds: [...formData.governmentIds, { type: '', number: '' }]
-    })
-  }
-
-  const handleGovernmentIdChange = (index, field, value) => {
-    const newGovernmentIds = [...formData.governmentIds]
-    newGovernmentIds[index][field] = value
-    setFormData({ ...formData, governmentIds: newGovernmentIds })
   }
 
   const handleNext = () => {
@@ -102,213 +72,185 @@ export function ApplicationFormComponent() {
     }
   }
 
-
   const handleSubmit = async () => {
-    setLoading(true);
+    setLoading(true)
+
     try {
+      const formDataToSend = new FormData()
+
+      Object.keys(formData).forEach(key => {
+        if (key === 'governmentIds') {
+          formDataToSend.append(key, JSON.stringify(formData[key]))
+        } else {
+          formDataToSend.append(key, formData[key])
+        }
+      })
+
+      if (selectedImage) {
+        formDataToSend.append('image', selectedImage, selectedImage.name)
+      } else {
+        throw new Error('No image selected')
+      }
+
       const response = await fetch('http://127.0.0.1:5000/analyze', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      if (!response.ok) throw new Error('API request failed');
-      const data = await response.json();
-      setApiResponse(data);
-      alert('Form submitted successfully!');
+        body: formDataToSend,
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const result = await response.json()
+      console.log('Form submitted successfully:', result)
+      alert('Form and image submitted successfully!')
+      router.push('/dashboard')
     } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('Failed to submit form.');
+      console.error('Error submitting form:', error)
+      alert(`Failed to submit form and/or image. Error: ${error.message}`)
     } finally {
-      router.push('/dashboard');
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
+
+  
+
 
   const renderFormPage = () => {
     switch (currentPage) {
       case 0:
-        return (
-          (<div className="space-y-4">
+        return (<>
+          <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="vendorName">Vendor Name</Label>
+              <Label htmlFor="vendorName" className="text-white">Vendor Name</Label>
               <Input
                 id="vendorName"
                 name="vendorName"
                 value={formData.vendorName}
                 onChange={handleInputChange}
-                className="bg-slate-800/50 border-slate-700 text-white" />
+                placeholder="Enter your full name"
+                className="bg-white text-black placeholder-gray-500" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="businessName">Business Name</Label>
+              <Label htmlFor="businessName" className="text-white">Business Name</Label>
               <Input
                 id="businessName"
                 name="businessName"
                 value={formData.businessName}
                 onChange={handleInputChange}
-                className="bg-slate-800/50 border-slate-700 text-white" />
+                placeholder="Enter your business name"
+                className="bg-white text-black placeholder-gray-500" />
             </div>
+          </div>
+        </>);
+      case 1:
+        return (<>
+          <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="businessTitle">Business Title</Label>
+              <Label htmlFor="businessTitle" className="text-white">Business Title</Label>
               <Input
                 id="businessTitle"
                 name="businessTitle"
                 value={formData.businessTitle}
                 onChange={handleInputChange}
-                className="bg-slate-800/50 border-slate-700 text-white" />
+                placeholder="Enter your business title"
+                className="bg-white text-black placeholder-gray-500" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
-              <div className="flex space-x-2">
-                <Input
-                  id="location"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  className="flex-grow bg-slate-800/50 border-slate-700 text-white" />
-                <Button
-                  onClick={handleLocationDetect}
-                  variant="outline"
-                  className="bg-slate-800/50 border-slate-700 text-white">
-                  <MapPin className="w-4 h-4 mr-2" />
-                  Locate Me
-                </Button>
-              </div>
+              <Label htmlFor="location" className="text-white">Location</Label>
+              <Input
+                id="location"
+                name="location"
+                value={formData.location}
+                onChange={handleInputChange}
+                placeholder="Enter your business location"
+                className="bg-white text-black placeholder-gray-500" />
             </div>
-          </div>)
-        );
-      case 1:
-        return (
-          (<div className="space-y-4">
+          </div>
+        </>);
+      case 2:
+        return (<>
+          <div className="space-y-4">
             <div className="space-y-2">
-              {/* <Label htmlFor="welfareScheme">Welfare Scheme</Label>
-              <Select onValueChange={(value) => handleSelectChange('welfareScheme', value)}>
-                <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white">
-                  <SelectValue placeholder="Select a welfare scheme" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="scheme1">Scheme 1</SelectItem>
-                  <SelectItem value="scheme2">Scheme 2</SelectItem>
-                  <SelectItem value="scheme3">Scheme 3</SelectItem>
-                </SelectContent>
-              </Select> */}
-              <label htmlFor="welfare-scheme">Select Welfare Scheme:</label>
-                <Select value={formData.welfareScheme} onValueChange={(value) => handleSelectChange('welfareScheme', value)}>
-                    <SelectTrigger id="welfare-scheme">
-                        <SelectValue placeholder="Select a Scheme" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="scheme1">Scheme 1</SelectItem>
-                        <SelectItem value="scheme2">Scheme 2</SelectItem>
-                        <SelectItem value="scheme3">Scheme 3</SelectItem>
-                    </SelectContent>
-                </Select>
+              <Label htmlFor="welfareScheme" className="text-white">Welfare Scheme</Label>
+              <Input
+                id="welfareScheme"
+                name="welfareScheme"
+                value={formData.welfareScheme}
+                onChange={handleInputChange}
+                placeholder="Enter welfare scheme (if applicable)"
+                className="bg-white text-black placeholder-gray-500" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="familyMembers">Number of Family Members</Label>
+              <Label htmlFor="familyMembers" className="text-white">Number of Family Members</Label>
               <Input
                 id="familyMembers"
                 name="familyMembers"
                 type="number"
                 value={formData.familyMembers}
                 onChange={handleInputChange}
-                
-                className="bg-slate-800/50 border-slate-700 text-white" />
+                placeholder="Enter number of family members"
+                className="bg-white text-black placeholder-gray-500" />
             </div>
-          </div>)
-        );
-      case 2:
-        return (
-          (<div className="space-y-4">
+          </div>
+        </>);
+      case 3:
+        return (<>
+          <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="enterpriseImages">Upload Images or Videos of Your Enterprise</Label>
-
-              <div className="flex items-center space-x-2">
+              <Label htmlFor="governmentIdType" className="text-white">Government ID Type</Label>
+              <Select
+                onValueChange={(value) => handleGovIdChange('type', value)}
+                value={formData.governmentIds[0].type}>
+                <SelectTrigger className="bg-white text-black">
+                  <SelectValue placeholder="Select ID type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="aadhar">Aadhar Card</SelectItem>
+                  <SelectItem value="pan">PAN Card</SelectItem>
+                  <SelectItem value="voter">Voter ID</SelectItem>
+                  <SelectItem value="driving">Driving License</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="governmentIdNumber" className="text-white">Government ID Number</Label>
               <Input
-                id="enterpriseImages"
-                type="file"
-                multiple
-                accept="image/,video/"
-                onChange={handleFileUpload}
-                className="bg-slate-800/50 border-slate-700 text-white" />
-                </div>
-
-
+                id="governmentIdNumber"
+                name="governmentIds[0].number"
+                value={formData.governmentIds[0].number}
+                onChange={(e) => handleGovIdChange('number', e.target.value)}
+                placeholder="Enter your ID number"
+                className="bg-white text-black placeholder-gray-500" />
             </div>
+          </div>
+        </>);
+      case 4:
+        return (<>
+          <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="shopLocation">Location of Shops</Label>
+              <Label htmlFor="shopLocation" className="text-white">Shop Location</Label>
               <Textarea
                 id="shopLocation"
                 name="shopLocation"
-                type="string"
                 value={formData.shopLocation}
                 onChange={handleInputChange}
-                placeholder="Enter the locations of your shops"
-                className="bg-slate-800/50 border-slate-700 text-white" />
+                placeholder="Describe your shop location"
+                rows={4}
+                className="bg-white text-black placeholder-gray-500" />
             </div>
-          </div>)
-        );
-      case 3:
-        return (
-          (<div className="space-y-4">
-            <p className="text-white">Share this survey link with your friends, family, neighbors, and suppliers:</p>
-            <div
-              className="flex items-center space-x-2 bg-slate-800/50 border border-slate-700 rounded p-2">
+            <div className="space-y-2">
+              <Label htmlFor="image" className="text-white">Upload Image</Label>
               <Input
-                value={'http://localhost:8501'}
-                readOnly
-                className="bg-transparent border-none text-white" />
-              <Button variant="outline1" onClick={() => window.open("http://localhost:8501", "_blank")} className="bg-slate-700 text-white">
-                <Share2 className="w-4 h-4 mr-2" />
-                Share
-              </Button>
+                id="image"
+                type="file"
+                onChange={handleImageUpload}
+                accept="image/*"
+                className="bg-white text-black" />
+              {selectedImage && <p className="text-sm text-green-400 mt-1">Image selected: {selectedImage.name}</p>}
             </div>
-
-            <div
-              className="flex items-center space-x-2 bg-slate-800/50 border border-slate-700 rounded p-2">
-              <Input
-                value={'http://localhost:8501'}
-                readOnly
-                className="bg-transparent border-none text-white" />
-              <Button variant="outline2" onClick={() => window.open("http://localhost:8502", "_blank")} className="bg-slate-700 text-white">
-                <Share2 className="w-4 h-4 mr-2" />
-                Share
-              </Button>
-            </div>
-
-          </div>)
-        );
-      case 4:
-        return (
-          (<div className="space-y-4">
-            {formData.governmentIds.map((id, index) => (
-              <div key={index} className="space-y-2">
-                <Select value={formData.governmentIds[0].type} onValueChange={(value) => handleGovernmentIdChange(index, 'type', value)}>
-                  <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white">
-                    <SelectValue placeholder="Select ID type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="voter">Voter ID</SelectItem>
-                    <SelectItem value="samgra">Samgra ID</SelectItem>
-                    <SelectItem value="aadhaar">Aadhaar</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Input
-                  placeholder="ID Number"
-                  value={id.number}
-                  onChange={(e) => handleGovernmentIdChange(index, 'number', e.target.value)}
-                  className="bg-slate-800/50 border-slate-700 text-white" />
-              </div>
-            ))}
-            <Button
-              onClick={handleAddGovernmentId}
-              variant="outline"
-              className="bg-slate-800/50 border-slate-700 text-white">
-              + Add Another ID
-            </Button>
-          </div>)
-        );
+          </div>
+        </>);
       default:
         return null
     }
@@ -317,97 +259,43 @@ export function ApplicationFormComponent() {
   return (
     (<div
       className="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-950 to-indigo-950 p-4 relative overflow-hidden">
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <svg
-          className="absolute w-[800px] h-[800px] -top-[400px] -left-[400px] text-violet-500/10"
-          viewBox="0 0 800 800">
-          <circle cx="400" cy="400" r="300" fill="currentColor" />
-        </svg>
-        <svg
-          className="absolute w-[800px] h-[800px] -bottom-[400px] -right-[400px] text-indigo-500/10"
-          viewBox="0 0 800 800">
-          <circle cx="400" cy="400" r="300" fill="currentColor" />
-        </svg>
-      </div>
-      {/* Animated floating shapes */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute top-1/4 left-1/4 w-2 h-2 bg-violet-400/20 rounded-full animate-float1"></div>
-        <div
-          className="absolute top-3/4 left-1/2 w-3 h-3 bg-violet-400/30 rounded-full animate-float2"></div>
-        <div
-          className="absolute top-1/2 right-1/4 w-2 h-2 bg-indigo-400/20 rounded-full animate-float3"></div>
-      </div>
       <Card
-        className="w-full max-w-lg border-slate-800 bg-slate-900/50 backdrop-blur-sm text-white relative z-10">
+        className="w-full max-w-lg border-slate-700 bg-slate-800/90 backdrop-blur-sm text-white relative z-10">
         <CardHeader>
-          <CardTitle>{formPages[currentPage]}</CardTitle>
-          <CardDescription className="text-slate-400">
+          <CardTitle className="text-2xl font-bold text-white">{formPages[currentPage]}</CardTitle>
+          <CardDescription className="text-slate-300">
             Step {currentPage + 1} of {formPages.length}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {renderFormPage()}
         </CardContent>
-        {/* <CardFooter className="flex justify-between">
+        <CardFooter className="flex justify-between">
           <Button
             onClick={handleBack}
             disabled={currentPage === 0}
             variant="outline"
-            className="bg-slate-800/50 border-slate-700 text-white">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
+            className="text-white border-white hover:bg-slate-700">
+            <ArrowLeft className="mr-2 h-4 w-4" /> Back
           </Button>
-          <Button
-            onClick={handleNext}
-            disabled={currentPage === formPages.length - 1}
-            className="bg-violet-600 hover:bg-violet-700 text-white">
-            {currentPage === formPages.length - 1 ? 'Submit' : 'Next'}
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
-        </CardFooter> */}
-        <CardFooter className="flex justify-between">
-        <Button onClick={handleBack} disabled={currentPage === 0}>
-          Back
-        </Button>
-        {currentPage === formPages.length - 1 ? (
-          
-          <Button onClick={handleSubmit}>
-            Submit
-          </Button>
-          
-          
-        ) : (
-          <Button onClick={handleNext}>
-            Next
-          </Button>
-        )}
-      </CardFooter>
+          {currentPage === formPages.length - 1 ? (
+            <Button
+              onClick={handleSubmit}
+              disabled={loading || !selectedImage}
+              variant="default"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white">
+              {loading ? 'Submitting...' : 'Submit'} <Share2 className="ml-2 h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              onClick={handleNext}
+              variant="default"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white">
+              Next <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          )}
+        </CardFooter>
       </Card>
-      <style jsx>{`
-        @keyframes float1 {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
-        @keyframes float2 {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-15px); }
-        }
-        @keyframes float3 {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
-        .animate-float1 {
-          animation: float1 3s ease-in-out infinite;
-        }
-        .animate-float2 {
-          animation: float2 4s ease-in-out infinite;
-        }
-        .animate-float3 {
-          animation: float3 5s ease-in-out infinite;
-        }
-      `}</style>
     </div>)
   );
 }
