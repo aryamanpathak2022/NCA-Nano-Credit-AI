@@ -373,7 +373,7 @@ Every entrepreneur receives a **Unique Credit Data Card** with:
 
 #### **1. Clone the Repository**  
 ```bash  
-git clone https://github.com/your-username/NanoCreditAI.git  
+git clone https://github.com/aryamanpathak2022/NCA-Nano-Credit-AI.git  
 cd NanoCreditAI
 ```
 2. Install Frontend Dependencies
