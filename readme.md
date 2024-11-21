@@ -1,4 +1,4 @@
-# 🌟 **Nano Credit AI**: ML solution for assessing nano-enterprise creditworthiness 
+# 🌟 **Nano Credit AI**: ML solution for assessing Nano-Enterprise Creditworthiness 
 
 ---
 
