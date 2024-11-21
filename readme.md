@@ -1,4 +1,4 @@
-# 🌟 **Nano Credit AI**: Empowering Dreams, One Nano Entrepreneur at a Time  
+# 🌟 **Nano Credit AI**: ML solution for assessing Nano-Enterprise Creditworthiness 
 
 ---
 

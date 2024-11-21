@@ -35,6 +35,8 @@ import {
   Star,
 } from 'lucide-react';
 
+
+
 // Placeholder chart component (replace with actual chart library component)
 // const LineChart = ({ data, xAxis, yAxis }) => (
 //   <div
@@ -43,6 +45,8 @@ import {
 //   </div>
 // )
 
+
+
 export function BorrowerDashboardComponent() {
   const [activeTab, setActiveTab] = useState("overview")
   const [scrolled, setScrolled] = useState(false)
@@ -50,6 +54,19 @@ export function BorrowerDashboardComponent() {
   const [cardVisible, setCardVisible] = useState(false)
   const cardRef = useRef(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+
+  const [applicationData, setApplicationData] = useState({
+    vendor_name: '',
+    business_name: '',
+    business_title: '',
+    location: '',
+    welfare_scheme: '',
+    family_members: '',
+    shop_location: '',
+    government_ids: [{ type: '', number: '' }]
+  })
+  
+  const [analysisResult, setAnalysisResult] = useState(null)
 
   const router = useRouter();
 
@@ -93,6 +110,76 @@ export function BorrowerDashboardComponent() {
     const tiltY = (width / 2 - x) / 20
     return `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/get-analysis')  // Replace with your actual API endpoint
+        if (!response.ok) {
+          throw new Error('Failed to fetch analysis data')
+        }
+        const data = await response.json()
+  
+        // Extract the fields from the response
+        const { analysis_result, form_data } = data
+        console.log('Analysis result:', analysis_result)
+        console.log('Form data:', form_data)
+
+
+
+        const parseAnalysisResult = (input) => {
+          // Step 1: Remove the "Analysis result:" prefix
+          const cleanedInput = input.replace("Analysis result:", "").trim();
+      
+          // Step 2: Split the input into lines
+          const lines = cleanedInput.split("\n");
+      
+          // Step 3: Parse each line into key-value pairs
+          const result = {};
+          lines.forEach(line => {
+              const [key, value] = line.split(/:(.+)/); // Split at the first colon
+              if (key && value) {
+                  result[key.trim()] = value.trim().replace(/^"|"$/g, ""); // Remove quotes if present
+              }
+          });
+      
+          return result;
+      };
+
+
+      const parsedResult = parseAnalysisResult(analysis_result);
+      const parsedResultString = JSON.stringify(parsedResult);
+
+
+
+        
+
+
+
+
+        // console.log(parsedResult)
+        // Set the state for form fields and analysis result
+        console.log(parsedResult,"hello")
+        console.log(parsedResultString)
+        setAnalysisResult(parsedResultString)
+        // console.log(analysisResult.customer_review,"helloi")
+        setApplicationData({
+          vendor_name: form_data.vendor_name  || '',
+          business_name: form_data.business_name || '',
+          business_title: form_data.business_title  || '',
+          location: form_data.location,
+          welfare_scheme: form_data.welfare_scheme,
+          family_members: form_data.family_members,
+          shop_location: form_data.shop_location,
+          government_ids: form_data.government_ids,
+        })
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+  
+    fetchData()
+  }, [])  // Runs once on component mount
 
   return (
     (<div
@@ -206,7 +293,7 @@ export function BorrowerDashboardComponent() {
               className="mr-4 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400" />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="border-slate-700 bg-slate-800/50 text-white">John Doe</Button>
+                <Button variant="outline" className="border-slate-700 bg-slate-800/50 text-white">{applicationData.business_name}</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-slate-800 border-slate-700">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -251,7 +338,7 @@ export function BorrowerDashboardComponent() {
                   <BarChart3 className="h-4 w-4 text-violet-400" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">720</div>
+                  <div className="text-2xl font-bold">621</div>
                   <p className="text-xs text-slate-400">
                     +15 from last month
                   </p>
@@ -331,40 +418,38 @@ export function BorrowerDashboardComponent() {
               </Card>
               <Card className="col-span-3 bg-slate-800/50 border-slate-700">
                 <CardHeader>
-                  <CardTitle>Credit Score Factors</CardTitle>
+                  <CardTitle>Important Business Factors</CardTitle>
                   <CardDescription className="text-slate-400">
                     Factors influencing your credit score
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    {[
-                       { name: "Community Reputation", score: 95, icon: <ShieldCheck className="w-4 h-4" /> },
-                       { name: "Business Activity Observations", score: 85, icon: <BarChart3 className="w-4 h-4" /> },
-                       { name: "Informal Credit Relationships", score: 70, icon: <Clock className="w-4 h-4" /> },
-                       { name: "Asset Ownership", score: 80, icon: <Star className="w-4 h-4" /> },
-                       { name: "Utility and Bill Payment Patterns", score: 90, icon: <Sparkles className="w-4 h-4" /> },
-                       { name: "Local Market Standing", score: 88, icon: <ShieldCheck className="w-4 h-4" /> },
-                       { name: "Participation in Welfare or Support Programs", score: 78, icon: <BarChart3 className="w-4 h-4" /> },
-                       { name: "Family and Dependents", score: 82, icon: <Clock className="w-4 h-4" /> },
-                       { name: "Seasonal and Environmental Impact", score: 65, icon: <Star className="w-4 h-4" /> },
-                       { name: "Behavioral Indicators", score: 90, icon: <Sparkles className="w-4 h-4" /> },
-                       { name: "Business Location and Infrastructure", score: 75, icon: <ShieldCheck className="w-4 h-4" /> },
-    
-                    ].map((factor) => (
-                      <div key={factor.name} className="flex items-center">
-                        <div className="mr-2 text-violet-400">{factor.icon}</div>
-                        <div className="flex-grow">
-                          <div className="flex justify-between mb-1">
-                            <span className="text-sm font-medium">{factor.name}</span>
-                            <span className="text-sm font-medium">{factor.score}%</span>
-                          </div>
-                          <Progress value={factor.score} className="h-2" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
+    <div className="space-y-4">
+      {/* Check if analysisResult is valid */}
+      {analysisResult ? (
+        Object.entries(JSON.parse(analysisResult)).map(([key, value]) => (
+          <div key={key} className="flex items-center">
+            <div className="mr-2 text-violet-400">
+              {/* Placeholder for an icon */}
+              <ShieldCheck className="w-4 h-4" />
+            </div>
+            <div className="flex-grow">
+              <div className="flex justify-between mb-1">
+                <span className="text-sm font-medium capitalize">
+                  {key.replace(/_/g, ' ')}
+                </span>
+                <span className="text-sm font-medium text-gray-300">{value}</span>
+              </div>
+              {/* Optionally include a progress bar */}
+              <Progress value={70} className="h-2" />
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="text-gray-400">No data available</div>
+      )}
+    </div>
+  </CardContent>
               </Card>
             </div>
           </TabsContent>
