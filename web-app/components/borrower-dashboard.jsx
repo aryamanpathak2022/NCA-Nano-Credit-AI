@@ -338,7 +338,7 @@ export function BorrowerDashboardComponent() {
                   <BarChart3 className="h-4 w-4 text-violet-400" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">621</div>
+                  <div className="text-2xl font-bold">6689</div>
                   <p className="text-xs text-slate-400">
                     +15 from last month
                   </p>
@@ -517,31 +517,31 @@ export function BorrowerDashboardComponent() {
                         strokeDashoffset="62.8"></circle>
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-4xl font-bold">621</span>
+                      <span className="text-4xl font-bold">689</span>
                     </div>
                   </div>
                 </div>
                 <div className="space-y-4">
                   {[
-                     { name: "Community Reputation", score: 95, icon: <ShieldCheck className="w-4 h-4" /> },
-                     { name: "Business Activity Observations", score: 85, icon: <BarChart3 className="w-4 h-4" /> },
-                     { name: "Informal Credit Relationships", score: 70, icon: <Clock className="w-4 h-4" /> },
-                     { name: "Asset Ownership", score: 80, icon: <Star className="w-4 h-4" /> },
-                     { name: "Utility and Bill Payment Patterns", score: 90, icon: <Sparkles className="w-4 h-4" /> },
+                     { name: "Community Reputation", score: 55, icon: <ShieldCheck className="w-4 h-4" /> },
+                     { name: "Business Activity Observations", score: 65, icon: <BarChart3 className="w-4 h-4" /> },
+                     { name: "Informal Credit Relationships", score: 90, icon: <Clock className="w-4 h-4" /> },
+                     { name: "Asset Ownership", score: 67, icon: <Star className="w-4 h-4" /> },
+                     { name: "Utility and Bill Payment Patterns", score: 89, icon: <Sparkles className="w-4 h-4" /> },
                      { name: "Local Market Standing", score: 88, icon: <ShieldCheck className="w-4 h-4" /> },
                      { name: "Participation in Welfare or Support Programs", score: 78, icon: <BarChart3 className="w-4 h-4" /> },
-                     { name: "Family and Dependents", score: 82, icon: <Clock className="w-4 h-4" /> },
-                     { name: "Seasonal and Environmental Impact", score: 65, icon: <Star className="w-4 h-4" /> },
-                     { name: "Behavioral Indicators", score: 90, icon: <Sparkles className="w-4 h-4" /> },
-                     { name: "Business Location and Infrastructure", score: 75, icon: <ShieldCheck className="w-4 h-4" /> },
+                     { name: "Family and Dependents", score: 48, icon: <Clock className="w-4 h-4" /> },
+                     { name: "Seasonal and Environmental Impact", score: 35, icon: <Star className="w-4 h-4" /> },
+                     { name: "Behavioral Indicators", score: 60, icon: <Sparkles className="w-4 h-4" /> },
+                     { name: "Business Location and Infrastructure", score: 89, icon: <ShieldCheck className="w-4 h-4" /> },
                      { name: "Customer and Supplier Relationships", score: 80, icon: <BarChart3 className="w-4 h-4" /> },
-                     { name: "Observed Consistency", score: 85, icon: <Clock className="w-4 h-4" /> },
-                     { name: "Training and Skill Development", score: 88, icon: <Star className="w-4 h-4" /> },
-                     { name: "Debt and Liabilities", score: 70, icon: <Sparkles className="w-4 h-4" /> },
-                     { name: "Savings and Insurance", score: 90, icon: <ShieldCheck className="w-4 h-4" /> },
-                     { name: "Aadhaar Card", score: 95, icon: <BarChart3 className="w-4 h-4" /> },
-                     { name: "Ration Card", score: 85, icon: <Clock className="w-4 h-4" /> },
-                     { name: "Voter ID Card", score: 80, icon: <Star className="w-4 h-4" /> },
+                     { name: "Observed Consistency", score: 82, icon: <Clock className="w-4 h-4" /> },
+                     { name: "Training and Skill Development", score: 97, icon: <Star className="w-4 h-4" /> },
+                     { name: "Debt and Liabilities", score: 79, icon: <Sparkles className="w-4 h-4" /> },
+                     { name: "Savings and Insurance", score: 60, icon: <ShieldCheck className="w-4 h-4" /> },
+                     { name: "Aadhaar Card", score: 75, icon: <BarChart3 className="w-4 h-4" /> },
+                     { name: "Ration Card", score: 65, icon: <Clock className="w-4 h-4" /> },
+                     { name: "Voter ID Card", score: 60, icon: <Star className="w-4 h-4" /> },
                   ].map((factor) => (
                     <div key={factor.name} className="flex items-center">
                       <div className="mr-2 text-violet-400">{factor.icon}</div>

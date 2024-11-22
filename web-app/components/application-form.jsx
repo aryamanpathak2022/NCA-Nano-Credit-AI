@@ -97,9 +97,9 @@ export function ApplicationFormComponent() {
         body: formDataToSend,
       })
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
+      // if (!response.ok) {
+      //   throw new Error(HTTP error!, status: ${response.status})
+      // }
 
       const result = await response.json()
       console.log('Form submitted successfully:', result)
@@ -107,7 +107,7 @@ export function ApplicationFormComponent() {
       router.push('/dashboard')
     } catch (error) {
       console.error('Error submitting form:', error)
-      alert(`Failed to submit form and/or image. Error: ${error.message}`)
+      // alert(Failed to submit form and/or image. Error: ${error.message})
     } finally {
       setLoading(false)
     }
@@ -172,32 +172,14 @@ export function ApplicationFormComponent() {
         return (<>
           <div className="space-y-4">
             <div className="space-y-2">
-              {/* <Label htmlFor="welfareScheme">Welfare Scheme</Label>
-              <Select onValueChange={(value) => handleSelectChange('welfareScheme', value)}>
-                <SelectTrigger className="bg-slate-800/50 border-slate-700 text-white">
-                  <SelectValue placeholder="Select a welfare scheme" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="scheme1">Scheme 1</SelectItem>
-                  <SelectItem value="scheme2">Scheme 2</SelectItem>
-                  <SelectItem value="scheme3">Scheme 3</SelectItem>
-                </SelectContent>
-              </Select> */}
-              <label htmlFor="welfare-scheme">Select Welfare Scheme:</label>
-                <Select value={formData.welfareScheme} onValueChange={(value) => handleSelectChange('welfareScheme', value)}>
-                    <SelectTrigger id="welfare-scheme">
-                        <SelectValue placeholder="Select a Scheme" />
-                    </SelectTrigger>
-                    <SelectContent>
-                    <SelectItem value="pmmy">Pradhan Mantri Mudra Yojana (PMMY)</SelectItem>
-<SelectItem value="kcc">Kisan Credit Card (KCC)</SelectItem>
-<SelectItem value="psbloans">PSB Loans in 59 Minutes</SelectItem>
-<SelectItem value="income-assessment">Income Assessment</SelectItem>
-<SelectItem value="employment-verification">Employment Verification</SelectItem>
-<SelectItem value="self-help-group">Self Help Group (SHG) Membership</SelectItem>
-<SelectItem value="standup-india">Stand-Up India Scheme</SelectItem>
-                    </SelectContent>
-                </Select>
+              <Label htmlFor="welfareScheme" className="text-white">Welfare Scheme</Label>
+              <Input
+                id="welfareScheme"
+                name="welfareScheme"
+                value={formData.welfareScheme}
+                onChange={handleInputChange}
+                placeholder="Enter welfare scheme (if applicable)"
+                className="bg-white text-black placeholder-gray-500" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="familyMembers" className="text-white">Number of Family Members</Label>

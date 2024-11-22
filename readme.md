@@ -1,8 +1,8 @@
-# 🌟 **Nano Credit AI**: ML solution for assessing Nano-Enterprise Creditworthiness 
+#  🌟 **Nano Credit AI**: ML solution for assessing Nano-Enterprise Creditworthiness 
 
 ---
 
-## 🚀 **Vision**  
+##  🚀 **Vision**  
 Imagine a world where **nano-entrepreneurs**—the heart and soul of local economies—can access the credit they deserve. **Nano Credit AI** is here to make that a reality.  
 We’re redefining financial inclusion by blending **AI innovation** with a passion for empowering small-scale entrepreneurs to unlock their full potential.  
 
@@ -31,6 +31,10 @@ Nano Credit AI is a **revolutionary credit assessment platform** designed for th
 These individuals often lack formal financial records, which prevents them from accessing traditional loans. Nano Credit AI changes this narrative by leveraging **non-traditional data points** and issuing a **Unique Credit Data Card**, giving entrepreneurs a digital identity that lenders trust.
 
 ---
+
+<!-- DEMO VIDEO -->
+## **Demo video**
+[DEMO VIDEO](https://youtu.be/kcVYlO8_HX0?si=7-oYgfMTtmo-ysqr)
 
 ## ✨ **Key Features**  
 
